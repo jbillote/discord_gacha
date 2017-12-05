@@ -36,7 +36,7 @@ class Pack:
                     "rarity": rarity_field
                 }
             )
-            ndx = randint(0, len(response["Item"]["cards"]))
+            ndx = randint(0, len(response["Item"]["cards"]) - 1)
             card = response["Item"]["cards"][ndx]
             resp = requests.get(card["image"])
             self.card_names.append(rarity_field + " " + card["name"])
