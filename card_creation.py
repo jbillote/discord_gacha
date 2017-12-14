@@ -18,19 +18,19 @@ class Card:
     Attributes:
         image (:obj:`Image`): Completed card image
     """
-    def __init__(self, character, rarity):
+    def __init__(self, character, rarity, set_name):
         foreground = None
 
         if rarity == Rarity.R:
-            foreground = Image.open("./card_borders/r.png")
+            foreground = Image.open("./card_borders/" + set_name + "/r.png")
             background = Image.new("RGBA", character.size, (255, 214, 242))
             background.paste(character, (0, 0), character)
         if rarity == Rarity.SR:
-            foreground = Image.open("./card_borders/sr.png")
+            foreground = Image.open("./card_borders/" + set_name + "/sr.png")
             background = Image.new("RGBA", character.size, (215, 247, 250))
             background.paste(character, (0, 0), character)
         if rarity == Rarity.UR:
-            foreground = Image.open("./card_borders/ur.png")
+            foreground = Image.open("./card_borders/" + set_name + "/ur.png")
             background = character
 
         self.image = Image.new("RGBA", foreground.size)

@@ -45,7 +45,7 @@ class Pack:
             curCard["rarity"] = rarity_field
             curCard["id"] = ndx
             self.cards.append(curCard.copy())
-            cards.append(Card(Image.open(BytesIO(resp.content)), rarity))
+            cards.append(Card(Image.open(BytesIO(resp.content)), rarity, table_name))
 
         cards[0].image = cards[0].image.rotate(50, 0, 1)
         cards[1].image = cards[1].image.rotate(25, 0, 1)
