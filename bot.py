@@ -77,6 +77,8 @@ async def on_message(message):
                             draw = False
                         else:
                             draw = True
+                else:
+                    draw = True
 
                 if draw:
                     pack = Pack(packs[split_message[1]])
