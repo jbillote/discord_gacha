@@ -16,15 +16,15 @@ client = discord.Client()
 
 def can_pull(user, draw_time, last_draw, use_cache):
     if use_cache:
-        return not(draw_time - timedelta(hours=24) <= last_opened_cache[user] <= draw_time)
+        return not(draw_time - timedelta(hours=20) <= last_opened_cache[user] <= draw_time)
     else:
-        return not(draw_time - timedelta(hours=24) <= last_draw <= draw_time)
+        return not(draw_time - timedelta(hours=20) <= last_draw <= draw_time)
 
 def next_pull_message(draw_time, last_pull_time):
     next_pull = last_pull_time + timedelta(days=1)
     hours = int((next_pull - draw_time).seconds / 60 / 60)
     minutes = int((next_pull - draw_time).seconds / 60 % 60)
-    return "Slow down! It hasn't been 24 hours since your last pack opening! Try again in " + str(hours) + " hour(s) " + str(minutes) + " minutes."
+    return "Slow down! It hasn't been 20 hours since your last pack opening! Try again in " + str(hours) + " hour(s) " + str(minutes) + " minutes."
 
 
 @client.event
