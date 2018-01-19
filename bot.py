@@ -83,11 +83,6 @@ async def on_message(message):
                 if draw:
                     pack = Pack(packs[split_message[1]]["table"])
 
-                    cards_obtained = "```\n"
-                    for ndx in range(0, len(pack.card_names)):
-                        cards_obtained += pack.card_names[ndx] + "\n"
-                    cards_obtained += "```"
-
                     fd = BytesIO()
                     pack.image.save(fd, "png")
                     fd.seek(0)
@@ -129,7 +124,12 @@ async def on_message(message):
 
                     last_opened_cache[message.author.id] = draw_time
 
-                    await client.send_message(message.channel, str(message.author).split("#")[0] +  " obtained:\n" + cards_obtained)
+                    obtained_embed = discord.Embed(color=0x0054a6)
+                    for ndx in range(0, len(pack.card_names)):
+                        split_name = pack.card_names[ndx].split(' ', 1)
+                        obtained_embed.add_field(name=split_name[0], value=split_name[1], inline=False)
+
+                    await client.send_message(message.channel, str(message.author).split('#')[0] + " obtained:", embed=obtained_embed)
                     await client.send_file(message.channel, fd, filename="pack.png")
             except Exception as e:
                 meta = {
@@ -144,13 +144,13 @@ async def on_message(message):
         else:
             await client.send_message(message.channel, "Please specify the name of a pack to open.")
     elif split_message[0] == ".help":
+        # Get the pack names alphabetically
         packs_keys = sorted(packs.keys())
 
-        packs_string = "```\n"
+        embed = discord.Embed(title="Available Packs", description="Packs currently available", color=0x0054a6)
         for k in packs_keys:
-            packs_string += k + " - " + packs[k]["name"] + "\n"
-        packs_string += "```"
-        await client.send_message(message.author, packs_string)
+            embed.add_field(name=k, value=packs[k]["name"], inline=False)
+        await client.send_message(message.author, embed=embed)
 
 
 token = ''
