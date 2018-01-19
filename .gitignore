@@ -102,3 +102,7 @@ ENV/
 
 .idea/*
 dev.json
+packs.json
+prod.json
+migrate_local.py
+save_images.py

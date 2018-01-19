@@ -21,7 +21,7 @@ def can_pull(user, draw_time, last_draw, use_cache):
         return not(draw_time - timedelta(hours=20) <= last_draw <= draw_time)
 
 def next_pull_message(draw_time, last_pull_time):
-    next_pull = last_pull_time + timedelta(days=1)
+    next_pull = last_pull_time + timedelta(hours=20)
     hours = int((next_pull - draw_time).seconds / 60 / 60)
     minutes = int((next_pull - draw_time).seconds / 60 % 60)
     return "Slow down! It hasn't been 20 hours since your last pack opening! Try again in " + str(hours) + " hour(s) " + str(minutes) + " minutes."
@@ -81,12 +81,7 @@ async def on_message(message):
                     draw = True
 
                 if draw:
-                    pack = Pack(packs[split_message[1]])
-
-                    cards_obtained = "```\n"
-                    for ndx in range(0, len(pack.card_names)):
-                        cards_obtained += pack.card_names[ndx] + "\n"
-                    cards_obtained += "```"
+                    pack = Pack(packs[split_message[1]]["table"])
 
                     fd = BytesIO()
                     pack.image.save(fd, "png")
@@ -129,7 +124,12 @@ async def on_message(message):
 
                     last_opened_cache[message.author.id] = draw_time
 
-                    await client.send_message(message.channel, str(message.author).split("#")[0] +  " obtained:\n" + cards_obtained)
+                    obtained_embed = discord.Embed(color=0x0054a6)
+                    for ndx in range(0, len(pack.card_names)):
+                        split_name = pack.card_names[ndx].split(' ', 1)
+                        obtained_embed.add_field(name=split_name[0], value=split_name[1], inline=False)
+
+                    await client.send_message(message.channel, str(message.author).split('#')[0] + " obtained:", embed=obtained_embed)
                     await client.send_file(message.channel, fd, filename="pack.png")
             except Exception as e:
                 meta = {
@@ -143,6 +143,14 @@ async def on_message(message):
             await client.send_message(message.channel, "The pack ``" + split_message[1] + "`` doesn't exist.")
         else:
             await client.send_message(message.channel, "Please specify the name of a pack to open.")
+    elif split_message[0] == ".help":
+        # Get the pack names alphabetically
+        packs_keys = sorted(packs.keys())
+
+        embed = discord.Embed(title="Available Packs", description="Packs currently available", color=0x0054a6)
+        for k in packs_keys:
+            embed.add_field(name=k, value=packs[k]["name"], inline=False)
+        await client.send_message(message.author, embed=embed)
 
 
 token = ''
