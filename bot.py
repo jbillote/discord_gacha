@@ -81,7 +81,7 @@ async def on_message(message):
                     draw = True
 
                 if draw:
-                    pack = Pack(packs[split_message[1]])
+                    pack = Pack(packs[split_message[1]]["table"])
 
                     cards_obtained = "```\n"
                     for ndx in range(0, len(pack.card_names)):
@@ -143,6 +143,14 @@ async def on_message(message):
             await client.send_message(message.channel, "The pack ``" + split_message[1] + "`` doesn't exist.")
         else:
             await client.send_message(message.channel, "Please specify the name of a pack to open.")
+    elif split_message[0] == ".help":
+        packs_keys = sorted(packs.keys())
+
+        packs_string = "```\n"
+        for k in packs_keys:
+            packs_string += k + " - " + packs[k]["name"] + "\n"
+        packs_string += "```"
+        await client.send_message(message.author, packs_string)
 
 
 token = ''
